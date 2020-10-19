@@ -1,0 +1,20 @@
+service:
+  name: api
+  description: 'checkout api'
+  environment: staging
+  version: 0.0.1
+  baseUrl: /api
+  docs:
+    baseUrl: /docs
+    username: username
+    password: password
+
+server:
+  port: 3001
+  host: localhost
+  shutdownDelay: 5000
+
+security:
+  secret: SomeSecrets
+  jwt:
+    expiry: 3600
