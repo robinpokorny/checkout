@@ -1,0 +1,538 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "api",
+    "description": "checkout api | [swagger.json](swagger.json)",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "ProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "price"
+        ]
+      },
+      "BadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Bad request"
+          },
+          "status": {
+            "type": "number",
+            "example": 400
+          }
+        }
+      },
+      "UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Unauthorized request"
+          },
+          "status": {
+            "type": "number",
+            "example": 401
+          }
+        }
+      },
+      "InternalServerErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal Server Error"
+          },
+          "status": {
+            "type": "number",
+            "example": 500
+          }
+        }
+      },
+      "BadGatewayResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Bad gateway"
+          },
+          "status": {
+            "type": "number",
+            "example": 502
+          }
+        }
+      },
+      "TotalOrderPromotionDto": {
+        "type": "object",
+        "properties": {
+          "minAmount": {
+            "type": "number",
+            "minimum": 1
+          },
+          "discountPersentage": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "minAmount",
+          "discountPersentage"
+        ]
+      },
+      "PromotionDto": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "total_amount",
+              "bundle"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "rule": {
+            "$ref": "#/components/schemas/TotalOrderPromotionDto"
+          }
+        },
+        "required": [
+          "code",
+          "type",
+          "description",
+          "rule"
+        ]
+      },
+      "CheckoutProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "quantity"
+        ]
+      },
+      "CheckoutRequestDto": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckoutProductDto"
+            }
+          },
+          "promotionCode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "products",
+          "promotionCode"
+        ]
+      },
+      "CheckoutResponseDto": {
+        "type": "object",
+        "properties": {
+          "total": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "payable": {
+            "type": "number"
+          },
+          "error": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "total",
+          "discount",
+          "payable"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/api/products": {
+      "get": {
+        "operationId": "products-list",
+        "summary": "Products list",
+        "description": "Products list",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request processed successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal communication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGatewayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/products/{id}": {
+      "get": {
+        "operationId": "products-details",
+        "summary": "Products details",
+        "description": "Products details",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal communication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGatewayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/promotions": {
+      "get": {
+        "operationId": "promotions-list",
+        "summary": "Promotions list",
+        "description": "Promotions list",
+        "tags": [
+          "Promotions"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Request processed successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal communication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGatewayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/promotions/{code}": {
+      "get": {
+        "operationId": "promotion-details",
+        "summary": "Promotion details",
+        "description": "Promotion details",
+        "tags": [
+          "Promotions"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": ""
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request processed successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal communication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGatewayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/checkout": {
+      "post": {
+        "operationId": "checkout-validation",
+        "summary": "Checkout",
+        "description": "Checkout process",
+        "tags": [
+          "Checkout"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Checkout request body",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request processed successfuly",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Internal communication error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadGatewayResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
